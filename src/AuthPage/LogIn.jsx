@@ -1,13 +1,13 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import signUpPic from "../assets/pic.png";
+import loginPic from "../assets/pic2.png";
 import useAxiosPublic from "../useHooks/useAxiosPublic";
 import useContextHook from "../useHooks/useContextHook";
 
-const SignUp = () => {
+const LogIn = () => {
   const navigate = useNavigate();
-  const { createUser, updateUserProfile } = useContextHook();
+  const { signInUser } = useContextHook();
   const axiosPublic = useAxiosPublic();
 
   const {
@@ -18,36 +18,22 @@ const SignUp = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    // const formData = { ...data, createdAt: new Date() };
-    createUser(data.email, data.password)
+    const { email, password } = data;
+    signInUser(email, password)
       .then((res) => {
-        const loggedUser = res.user;
-        console.log(loggedUser);
-        updateUserProfile(name)
-          .then(() => {
-            const userInfo = {
-              name: data.fullName,
-              email: data.email,
-              uid: loggedUser.uid,
-              createdAt: new Date(),
-              // photoURL: photoURL,
-            };
-            // console.log("User profile updated successfully");
-
-            const res = axiosPublic.post("/addUsers", userInfo);
-            // console.log("added task data", res.data);
-            reset();
-            toast.success("User created successfully!");
+        console.log("users", res.user.email);
+        const user = { email: email };
+        axiosPublic
+          .post("/jwt", user, { withCredentials: true }) //for cookies allow come from backend
+          .then((res) => {
+            console.log("token data is", res.data);
+            toast.success("Your Login Successfully!");
             navigate("/home");
-          })
-          .catch((error) => {
-            console.error("Error updating user profile:", error);
-            toast.error("Failed to update user profile!");
           });
       })
       .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Failed to create user!");
+        console.error("Login failed:", error);
+        toast.error("Login failed. Please check your credentials.");
       });
   };
   return (
@@ -62,35 +48,23 @@ const SignUp = () => {
             backgroundBlendMode: "overlay",
           }}
         >
-          <img src={signUpPic} alt="" className="object-cover " />
+          <img src={loginPic} alt="" className="object-cover " />
         </div>
 
-        <div className="flex items-center justify-center p-4 w-full mx-auto lg:px-12 lg:w-3/5">
+        <div className="flex items-center justify-center w-full p-4 mx-auto lg:px-12 lg:w-3/5">
           <div className="lg:w-4/6 w-full">
             <h1 className="text-3xl text-center font-semibold tracking-wider text-gray-800 capitalize ">
-              Sign up
+              Login
             </h1>
 
             <p className="mt-4 text-gray-500 text-center">
-              To Create Account, Please Fill in the From Below.
+              Welcome Back, Please Entry your Details to Login
             </p>
 
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="mx-4 space-y-4 mt-8"
             >
-              <div>
-                <label className="block mb-2 text-sm text-gray-800 ">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="fullName"
-                  {...register("fullName", { required: true })}
-                  placeholder="Enter your full name"
-                  className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-300 bg-white border border-gray-300 shadow-sm rounded-lg focus:border-blue-400 dark:focus:border-blue-400 focus:ring-green-600 focus:outline-none focus:ring focus:ring-opacity-40"
-                />
-              </div>
               <div>
                 <label className="block mb-2 text-sm text-gray-800 ">
                   Email Address
@@ -119,35 +93,20 @@ const SignUp = () => {
                   className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-300 bg-white border border-gray-300 shadow-sm rounded-lg focus:border-blue-400 dark:focus:border-blue-400 focus:ring-green-600  focus:outline-none focus:ring focus:ring-opacity-40"
                 />
               </div>
-
-              <div>
-                <label className="block mb-2 text-sm text-gray-800 ">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  name="confirmPass"
-                  {...register("confirmPass", { required: true })}
-                  placeholder="Retype password"
-                  required
-                  className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-300 bg-white border border-gray-300 shadow-sm rounded-lg focus:border-blue-400 dark:focus:border-blue-400 focus:ring-green-600  focus:outline-none focus:ring focus:ring-opacity-40"
-                />
-              </div>
-
               <button
                 type="submit"
                 className="flex items-center justify-center w-full btn bg-[#60E5AE] mt-10"
               >
-                <span>Sign up </span>
+                <span>Log In </span>
               </button>
             </form>
             <div className="flex w-full items-center justify-center">
               <div className="divider w-5/6 ">Or</div>
             </div>
             <div className="flex justify-center items-center">
-              <p className="text-gray-500">Already have an account?</p>
-              <Link to="/" className="font-bold">
-                Log In
+              <p className="text-gray-500">Don't have an account?</p>
+              <Link to="/register" className="font-bold">
+                Sign Up
               </Link>
             </div>
           </div>
@@ -157,4 +116,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default LogIn;

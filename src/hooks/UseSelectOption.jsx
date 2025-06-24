@@ -1,29 +1,23 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
-const TaskStatus = ({ statusFilter, setStatusFilter }) => {
-  const options = [
-    "All Task",
-    "InProgress",
-    "Pending",
-    "Collaborative Task",
-    "Done",
-  ];
+
+const UseSelectOption = ({ options, label }) => {
   const [selected, setSelected] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const handleSelectOption = (option) => {
     setSelected(option);
-    setStatusFilter(option);
     setIsOpen(false);
   };
 
   return (
-    <div className="relative w-52">
+    <div className="relative w-full lg:max-w-xs text-gray-700">
+      <label className="font-bold">{label}</label>
       <button
         defaultValue="Select Task"
-        className=" w-full border border-gray-300 rounded px-4 py-2 flex justify-between items-center bg-white shadow-sm hover:border-blue-500 transition"
+        className=" w-full border border-gray-300 rounded mt-2 px-4 py-2 flex justify-between items-center bg-white shadow-sm hover:border-blue-500 transition"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{selected ? selected : "Select Task"}</span>
@@ -45,10 +39,8 @@ const TaskStatus = ({ statusFilter, setStatusFilter }) => {
                 name="status"
                 className="checkbox checkbox-sm checkbox-success border-gray-300 "
                 checked={selected === option}
-                value={option}
                 onChange={(e) => {
                   handleSelectOption(option);
-                  setStatusFilter(option);
                 }}
               />
               <p className="ml-2 text-sm">{option}</p>
@@ -60,4 +52,4 @@ const TaskStatus = ({ statusFilter, setStatusFilter }) => {
   );
 };
 
-export default TaskStatus;
+export default UseSelectOption;

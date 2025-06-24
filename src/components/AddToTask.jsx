@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import useAxiosPublic from "../useHooks/useAxiosPublic";
 
-const AddToTask = ({ isOpen, onClose }) => {
+const AddToTask = ({ isOpen, onClose, refetch }) => {
   //   const [taskDateTime, setTaskDateTime] = useState("");
 
   const axiosPublic = useAxiosPublic();
@@ -16,11 +16,13 @@ const AddToTask = ({ isOpen, onClose }) => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    const formData = { ...data, status: "InProgress" };
     try {
-      const res = await axiosPublic.post("/addTask", data);
+      const res = await axiosPublic.post("/addTask", formData);
       console.log("added task data", res.data);
       reset();
-      toast.success("Create a new Todo");
+      toast.success("Task saved successfully!");
+      refetch();
     } catch (error) {
       console.error("Error:", error);
     }
@@ -30,20 +32,20 @@ const AddToTask = ({ isOpen, onClose }) => {
   return (
     <div className="relative flex justify-center p-6 ">
       <div
-        className="fixed inset-0 z-10 overflow-y-auto bg-opacity-40 mt-20"
+        className="fixed inset-0 z-10 overflow-y-auto bg-opacity-40 lg:mt-48 mt-14"
         aria-labelledby="modal-title"
         role="dialog"
         aria-modal="true"
       >
-        <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div className="flex items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
           <span className="hidden  sm:h-screen" aria-hidden="true">
             &#8203;
           </span>
 
-          <div className="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl rtl:text-right dark:bg-white/10 sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full sm:p-6">
-            <div className="flex items-center justify-center"></div>
+          <div className="relative inline-block border border-gray-300 bg-white/20 backdrop-blur-sm z-50  px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-lg rtl:text-right sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full sm:p-6">
+            <div className="flex items-center justify-center "></div>
 
-            <div className=" text-start">
+            <div className=" text-start ">
               <h3
                 className="text-xl font-medium leading-6 text-gray-800 capitalize "
                 id="modal-title"
@@ -87,16 +89,15 @@ const AddToTask = ({ isOpen, onClose }) => {
                 </div> */}
 
                 <div>
-                  <label className="text-gray-700 ">Task Datetime</label>
+                  <label className="text-gray-700 ">Start Date</label>
                   <input
                     type="datetime-local"
-                    name="dateTime"
-                    {...register("dateTime", { required: true })}
+                    name="startDate"
+                    {...register("startDate", { required: true })}
                     className="border border-gray-300 mt-2 rounded p-2 w-full"
-                    required
                   />
-                  {errors.dateTime && (
-                    <p className="text-red-500">{errors.dateTime.message}</p>
+                  {errors.startDate && (
+                    <p className="text-red-500">{errors.startDate.message}</p>
                   )}
                 </div>
 
@@ -111,6 +112,18 @@ const AddToTask = ({ isOpen, onClose }) => {
                   />
                   {errors.description && (
                     <p className="text-red-500">{errors.description.message}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="text-gray-700 ">End Date </label>
+                  <input
+                    type="datetime-local"
+                    name="endDate"
+                    {...register("endDate", { required: true })}
+                    className="border border-gray-300 mt-2 rounded p-2 w-full"
+                  />
+                  {errors.endDate && (
+                    <p className="text-red-500">{errors.endDate.message}</p>
                   )}
                 </div>
               </div>
