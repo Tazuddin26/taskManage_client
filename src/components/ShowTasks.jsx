@@ -44,7 +44,7 @@ const ShowTasks = ({ tasks }) => {
                     className="text-sm text-gray-700 cursor-pointer "
                     role="link"
                   >
-                    {new Date(task.dateTime).toLocaleString("en-BD", {
+                    {new Date(task.endDate).toLocaleString("en-BD", {
                       weekday: "long",
                       year: "numeric",
                       month: "long",

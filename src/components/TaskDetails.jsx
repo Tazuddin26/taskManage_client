@@ -7,7 +7,7 @@ import UseSelectOption from "../hooks/useSelectOption";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-
+import deletePic from "../assets/delete.png";
 const TaskDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -46,27 +46,22 @@ const TaskDetails = () => {
 
   const handleTaskDeleted = (id) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
+      title: "Are you sure!!",
+      text: "Do you want to delete this Task on this app?",
+      // icon: "warning",
+      imageUrl: deletePic,
+      imageWidth: 500,
+      imageHeight: 300,
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: "#60E5AE",
+      cancelButtonColor: "#FF4C2446",
+      confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = await axiosPublic.delete(`/task/${id}`);
         console.log("delete id", res.data);
-        if (res.data.deletedCount > 0) {
-          refetch();
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: `${tasks.category} is deleted Todos`,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
+        refetch();
+        toast.success(res.data.message);
         navigate("/home");
       }
     });
