@@ -38,7 +38,7 @@ const FilterCategory = ({ categoryFilter, setCategoryFilter }) => {
         )}
       </button>
       {isOpen && (
-        <div className="absolute z-10 mt-1 w-full bg-white/20 backdrop-blur-sm rounded-md shadow-xl">
+        <div className="absolute z-10 mt-1 w-full bg-white/10 backdrop-blur-sm rounded-md shadow-xl">
           {options.map((option) => (
             <label
               key={option}

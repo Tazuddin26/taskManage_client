@@ -16,12 +16,12 @@ const AllTask = ({
   console.log("open", isModalOpen);
   return (
     <div className="">
-      <div className="w-full  gap-10 px-3 relative">
+      <div className="w-full  gap-10 relative">
         <div className="w-full lg:flex justify-between space-y-4 ">
           <div className="mt-3">
             <h1 className="text-2xl font-bold">All Task List</h1>
           </div>
-          <div className=" lg:flex gap-3 space-y-3">
+          <div className=" lg:flex gap-3 space-y-3 ">
             <div className="flex gap-3 ">
               <FilterCategory
                 categoryFilter={categoryFilter}

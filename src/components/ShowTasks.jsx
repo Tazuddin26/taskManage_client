@@ -7,7 +7,7 @@ const ShowTasks = ({ tasks }) => {
   // const {_id, category, description, dateTime} = tasks
   return (
     <>
-      <div className=" grid grid-cols-1 mt-4 sm:grid-cols-3 gap-3 px-3">
+      <div className=" grid grid-cols-1 mt-4 sm:grid-cols-3 gap-3">
         {Array.isArray(tasks) ? (
           tasks.map((task) => (
             <div

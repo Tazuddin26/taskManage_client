@@ -4,6 +4,7 @@ import SignUp from "../AuthPage/SignUp";
 import AllTask from "../components/AllTask";
 import Spin from "../components/Spin";
 import TaskDetails from "../components/TaskDetails";
+import UpdateTask from "../components/UpdateTask";
 import AuthLayout from "../layout/AuthLayout";
 import MainLayout from "../layout/MainLayout";
 import Home from "../Pages/homePage/Home";
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
       {
         path: "taskDetails/:id",
         element: <TaskDetails />,
+      },
+      {
+        path: "taskDetails/:id/updateTask/:id",
+        element: <UpdateTask />,
       },
       {
         path: "spin",

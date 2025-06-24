@@ -1,22 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
 
-const UseSelectOption = ({ options, label }) => {
+const UseSelectOption = ({
+  options,
+  label,
+  disabled,
+  defaultValue,
+  onChange,
+}) => {
   const [selected, setSelected] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (defaultValue) {
+      setSelected(defaultValue);
+    }
+  }, [defaultValue]);
+
   const handleSelectOption = (option) => {
     setSelected(option);
     setIsOpen(false);
+    if (onChange) {
+      onChange(option);
+    }
   };
 
   return (
     <div className="relative w-full lg:max-w-xs text-gray-700">
       <label className="font-bold">{label}</label>
       <button
-        defaultValue="Select Task"
+        disabled={disabled}
         className=" w-full border border-gray-300 rounded mt-2 px-4 py-2 flex justify-between items-center bg-white shadow-sm hover:border-blue-500 transition"
         onClick={() => setIsOpen(!isOpen)}
       >

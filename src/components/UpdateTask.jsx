@@ -4,15 +4,10 @@ import useAxiosPublic from "../useHooks/useAxiosPublic";
 import { FaArrowsToDot } from "react-icons/fa6";
 import { BiSolidEditAlt } from "react-icons/bi";
 import UseSelectOption from "../hooks/useSelectOption";
-import { useState } from "react";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
-
-const TaskDetails = () => {
+const UpdateTask = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
-  const [selectStatus, setSelectStatus] = useState("");
   const statusOption = ["InProgress", "Pending", "Collaborative Task", "Done"];
   const {
     data: tasks = [],
@@ -26,69 +21,22 @@ const TaskDetails = () => {
       return res.data;
     },
   });
-
-  const handleUpdateStatus = async () => {
-    try {
-      const res = await axiosPublic.patch(`/editStatus/${id}`, {
-        status: selectStatus,
-      });
-      if (res.data.modifiedCount > 0) {
-        toast.success("🎉 Status updated successfully!");
-        refetch();
-      } else {
-        toast.info("No change in Status.");
-      }
-    } catch (error) {
-      console.error("Status update error:", error);
-      toast.error("Failed to update status.");
-    }
-  };
-
-  const handleTaskDeleted = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const res = await axiosPublic.delete(`/task/${id}`);
-        console.log("delete id", res.data);
-        if (res.data.deletedCount > 0) {
-          refetch();
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: `${tasks.category} is deleted Todos`,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-        navigate("/home");
-      }
-    });
-  };
-
   return (
     <div className=" lg:mx-10 bg-white rounded-md shadow-xl border border-gray-300 p-6">
       <div className="lg:p-6 mb-3">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="lg:text-2xl text-xl font-bold mb-4">Task Details</h1>
+            <h1 className="lg:text-2xl text-xl font-bold mb-4">
+              Status Update
+            </h1>
           </div>
           <div className="mb-2 ">
-            <button
-              onClick={() => navigate(`updateTask/${id}`)}
-              className="btn bg-[#FFAB001A] hover:bg-[#FFAB003A] border-none lg:px-6 py-1 lg:mr-5 mr-2 "
-            >
+            {/* <button className="btn bg-[#FFAB001A] hover:bg-[#FFAB003A] border-none lg:px-6 py-1 lg:mr-5 mr-2 ">
               <span className="flex items-center text-[#FFAB00] gap-1">
                 <BiSolidEditAlt size={20} />
                 Edit Task
               </span>
-            </button>
+            </button> */}
             <button
               onClick={() => navigate(`/home`)}
               className="btn bg-[#60E5AE] px-10 "
@@ -170,31 +118,22 @@ const TaskDetails = () => {
           </div>
           <div className="w-full mt-10 ">
             <UseSelectOption
+              defaultValue={tasks.status}
               options={statusOption}
               label="Change Status"
-              defaultValue={tasks.status}
-              onChange={(value) => setSelectStatus(value)}
-              // disabled={true}
+              disabled={false}
             />
           </div>
         </div>
       </div>
       <div className=" lg:mt-20 my-4 flex sm:justify-end  justify-center gap-5 lg:p-6">
-        <button
-          onClick={() => handleTaskDeleted(id)}
-          className="btn px-12 border-none bg-[#FF4C2426] hover:bg-[#FF4C2446] text-[#FF4C24]"
-        >
+        <button className="btn px-12 border-none bg-[#FF4C2426] hover:bg-[#FF4C2446] text-[#FF4C24]">
           Delete Task
         </button>
-        <button
-          onClick={handleUpdateStatus}
-          className="btn px-16 bg-[#60E5AE] "
-        >
-          Submit
-        </button>
+        <button className="btn px-16 bg-[#60E5AE] ">Submit</button>
       </div>
     </div>
   );
 };
 
-export default TaskDetails;
+export default UpdateTask;
