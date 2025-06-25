@@ -8,11 +8,19 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import deletePic from "../assets/delete.png";
+import conPic from "../assets/con.png";
+import AddToTask from "./AddToTask";
+import UpdateTask from "./UpdateTask";
+import useContextHook from "../useHooks/useContextHook";
+
 const TaskDetails = () => {
+  const { user } = useContextHook();
+  console.log("user", user);
   const { id } = useParams();
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
   const [selectStatus, setSelectStatus] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const statusOption = ["InProgress", "Pending", "Collaborative Task", "Done"];
   const {
     data: tasks = [],
@@ -22,7 +30,6 @@ const TaskDetails = () => {
     queryKey: ["tasks"],
     queryFn: async () => {
       const res = await axiosPublic.get(`/task/${id}`);
-      console.log("task details", res.data);
       return res.data;
     },
   });
@@ -32,8 +39,18 @@ const TaskDetails = () => {
       const res = await axiosPublic.patch(`/editStatus/${id}`, {
         status: selectStatus,
       });
+      console.log("update data", res.data);
       if (res.data.modifiedCount > 0) {
-        toast.success("🎉 Status updated successfully!");
+        // toast.success(" Status updated successfully!");
+        Swal.fire({
+          html: `<div class="w-full h-[350px] overflow-hidden rounded-lg mb-4 p-2">
+          <img src="${conPic}" class="w-full h-full object-cover items-center" alt="image" />
+        </div> <h2 class='text-2xl text-gray-800'>Successfully Completed the Task!</h2>
+        <p class='text-base text-gray-600'>Congratulations! you have successfully completed the task</p>`,
+          confirmButtonColor: "#60E5AE",
+          imageAlt: "Custom image",
+        });
+
         refetch();
       } else {
         toast.info("No change in Status.");
@@ -76,7 +93,7 @@ const TaskDetails = () => {
           </div>
           <div className="mb-2 ">
             <button
-              onClick={() => navigate(`updateTask/${id}`)}
+              onClick={() => setIsModalOpen(true)}
               className="btn bg-[#FFAB001A] hover:bg-[#FFAB003A] border-none lg:px-6 py-1 lg:mr-5 mr-2 "
             >
               <span className="flex items-center text-[#FFAB00] gap-1">
@@ -134,7 +151,7 @@ const TaskDetails = () => {
                         className=" text-gray-700 cursor-pointer lg:text-xl "
                         role="link"
                       >
-                        {new Date(tasks?.dateTime).toLocaleString("en-BD", {
+                        {new Date(tasks?.endDate).toLocaleString("en-BD", {
                           weekday: "long",
                           year: "numeric",
                           month: "long",
@@ -188,6 +205,12 @@ const TaskDetails = () => {
           Submit
         </button>
       </div>
+      <UpdateTask
+        tasks={tasks}
+        refetch={refetch}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };
